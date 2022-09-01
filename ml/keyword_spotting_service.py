@@ -91,6 +91,7 @@ if __name__ == "__main__":
 
     keyword1 = kss.predict("test/down.wav")
     keyword2 = kss.predict("test/left.wav")
+    keyword3 = kss.predict("test/nine.wav")
 
-    print(f"Predicted keywords: {keyword1}, {keyword2}")
+    print(f"Predicted keywords: {keyword1}, {keyword2}, {keyword3}")
 
