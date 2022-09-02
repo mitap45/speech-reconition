@@ -2,4 +2,5 @@
 ml/dataset/
 ml/dataset_turkish/
 ml/data_turkish.json
+ml/data_turkish_lpc.json
 ml/data.json
