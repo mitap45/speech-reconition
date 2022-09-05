@@ -2,6 +2,13 @@ import librosa
 import os
 import json
 import warnings
+from scipy.signal import lfilter, resample
+from scipy.signal.windows import hann
+import numpy as np
+from math import floor
+from lpc.lpc import lpc_encode
+
+
 
 warnings.filterwarnings("ignore")
 
@@ -46,8 +53,25 @@ def prepare_dataset(dataset_path, json_path, order=13, hop_length=512, n_fft=204
                     # enforce 1 sec. long signal
                     signal = signal[:SAMPLES_TO_CONSIDER]
 
-                    # extract the LPCs
-                    LPCs = librosa.lpc(signal, order=order)
+                    signal = np.array(signal)
+                    # normalize
+                    signal = 0.9 * signal / max(abs(signal))
+
+                    # resampling to 8kHz
+                    target_sample_rate = 8000
+                    target_size = int(len(signal) * target_sample_rate / sr)
+                    signal = resample(signal, target_size)
+                    sample_rate = target_sample_rate
+
+                    # 30ms Hann window
+                    sym = False  # periodic
+                    w = hann(floor(0.03 * sample_rate), sym)
+
+                    # Encode
+                    p = 6  # number of poles
+                    [A, G] = lpc_encode(signal, p, w)
+                    LPCs=np.concatenate((A, G))
+
 
                     # store data
                     data["labels"].append(i-1)

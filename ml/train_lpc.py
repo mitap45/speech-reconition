@@ -10,7 +10,7 @@ LEARNING_RATE = 0.0001
 EPOCHS = 40
 BATCH_SIZE = 32
 
-NUM_KEYWORDS = 14
+NUM_KEYWORDS = 9
 
 
 def load_dataset(data_path):
@@ -45,20 +45,19 @@ def build_model(input_shape, learning_rate, error="sparse_categorical_crossentro
     model = keras.Sequential()
 
     # conv layer 1
-    model.add(keras.layers.Conv1D(64, 3, activation="relu", input_shape=input_shape,
-                                  kernel_regularizer=keras.regularizers.l2(0.001)))
+    model.add(keras.layers.Conv2D(64, (3, 3), activation="relu", input_shape=input_shape, kernel_regularizer=keras.regularizers.l2(0.001)))
     model.add(keras.layers.BatchNormalization())
-    model.add(keras.layers.MaxPool1D(3, strides=2, padding="same"))
+    model.add(keras.layers.MaxPool2D((3, 3), strides=(2, 2), padding="same"))
 
     # conv layer 2
-    model.add(keras.layers.Conv1D(32, 3, activation="relu", kernel_regularizer=keras.regularizers.l2(0.001)))
+    model.add(keras.layers.Conv2D(32, (3, 3), activation="relu", kernel_regularizer=keras.regularizers.l2(0.001)))
     model.add(keras.layers.BatchNormalization())
-    model.add(keras.layers.MaxPool1D((3), strides=2, padding="same"))
+    model.add(keras.layers.MaxPool2D((3, 3), strides=(2, 2), padding="same"))
 
     # conv layer 3
-    model.add(keras.layers.Conv1D(32, 2, activation="relu", kernel_regularizer=keras.regularizers.l2(0.001)))
-    model.add(keras.layers.BatchNormalization())
-    model.add(keras.layers.MaxPool1D(2, strides=2, padding="same"))
+    # model.add(keras.layers.Conv2D(32, (3, 3), activation="relu", kernel_regularizer=keras.regularizers.l2(0.001)))
+    # model.add(keras.layers.BatchNormalization())
+    # model.add(keras.layers.MaxPool2D((3, 3), strides=(2, 2), padding="same"))
 
     # flaten the output feed it into dense layer
     model.add(keras.layers.Flatten())
@@ -66,7 +65,7 @@ def build_model(input_shape, learning_rate, error="sparse_categorical_crossentro
     model.add(keras.layers.Dropout(0.3))
 
     # softmax classifier
-    model.add(keras.layers.Dense(NUM_KEYWORDS, activation="softmax"))  # [0.1, 0.7, 0.2]
+    model.add(keras.layers.Dense(NUM_KEYWORDS, activation="softmax")) # [0.1, 0.7, 0.2]
 
     # compile the model
     optimiser = keras.optimizers.Adam(learning_rate=learning_rate)
@@ -83,7 +82,7 @@ def main():
     X_train, X_validation, X_test, y_train, y_validation, y_test = get_data_splits(DATA_PATH)
 
     # build the CNN Model
-    input_shape = (X_train.shape[1], X_train.shape[2])  # (#segments, # coefficients 13, 1)
+    input_shape = (X_train.shape[1], X_train.shape[2], X_train.shape[3])  # (#segments, # coefficients 13, 1)
     model = build_model(input_shape, LEARNING_RATE)
 
     # train the model

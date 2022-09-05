@@ -6,18 +6,13 @@ from scipy.signal import lfilter, resample
 from scipy.signal.windows import hann
 from numpy.random import randn
 import lpc
+import librosa
 
-[sample_rate, amplitudes] = scipy.io.wavfile.read('rtuk.wav')
+[sample_rate, amplitudes] = scipy.io.wavfile.read('speech.wav')
+
 amplitudes = np.array(amplitudes)
-
 # normalize
-s1 = amplitudes # original array (N, )
-s2 = abs(s1)    # preserves dimension (N, )
-s3 = max(map(max, s2))    # scalar
-s4 = 0.9*s1     # preserves dimension (N, )
-amplitudes = s4 / s3    # preserves dimension (N, )
-
-#amplitudes = 0.9*amplitudes/max(abs(amplitudes));
+amplitudes = 0.9*amplitudes/max(abs(amplitudes))
 
 # resampling to 8kHz
 target_sample_rate = 8000
