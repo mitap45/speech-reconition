@@ -68,7 +68,7 @@ def prepare_dataset(dataset_path, json_path, order=13, hop_length=512, n_fft=204
                     w = hann(floor(0.03 * sample_rate), sym)
 
                     # Encode
-                    p = 6  # number of poles
+                    p = 12  # number of poles
                     [A, G] = lpc_encode(signal, p, w)
                     LPCs=np.concatenate((A, G))
 
