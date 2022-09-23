@@ -68,7 +68,7 @@ class _Keyword_Spotting_Service:
         w = hann(floor(0.03 * sample_rate), sym)
 
         # Encode
-        p = 6  # number of poles
+        p = 12  # number of poles
         [A, G] = lpc_encode(signal, p, w)
         LPCs = np.concatenate((A, G))
 
