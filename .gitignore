@@ -6,3 +6,4 @@ ml/data_turkish_lpc.json
 ml/data.json
 .DS_Store
 ml/.DS_Store
+ml/__pycache__/
